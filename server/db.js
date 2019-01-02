@@ -5,7 +5,7 @@ module.exports = {
         user:'',//自己的用户名mysql用户名默认是root
         password:'',//mysql用户名密码
         database:'',//自己的数据库名
-        post:'3306'//mysql连接端口
+        post:''//mysql连接端口
     
     }
 }
