@@ -25,12 +25,13 @@ router.post('/addReader',(req,res)=>{
     var sql = $sql.reader.add
     var params = req.body
     console.log(params)
-    conn.query(sql,[params.name],function(err,result){
+    conn.query(sql,[params.name,params.password],function(err,result){
         if(err){
             console.log(err)
         }
         if(result){
             jsonWrite(res,result)
+            console.log('请求成功')
         }
     })
 })
@@ -54,23 +55,29 @@ router.post('/cancelReader',(req,res)=>{
 router.post('/searchReader',(req,res)=>{
     var sql = $sql.reader.search
     var params = req.body
-    console.log(params)
-    conn.query(sql,[params.name],function(err,result){
+    console.log(sql)
+    console.log(params.name)
+    conn.query(sql,[params.name,params.password],function(err,result){
         if(err){
             console.log(err)
         }
         if(result){
             jsonWrite(res,result)
+            // console.log(result)
+            // for(var i = 0;i<result.length;i++){
+            //     console.log('请求回来',result[i])
+            //     console.log('请求结果',typeof result[i],result[i].name)
+            // }
         }
     })
 })
 
 //更新用户
-router.post('/readerBorrow',(req,res)=>{
-    var sql = $sql.reader.borrowBook
+router.post('/updateReader',(req,res)=>{
+    var sql = $sql.reader.update
     var params = req.body
     console.log(params)
-    conn.query(sql,[params.name],function(err,result){
+    conn.query(sql,[params.password,params.name],function(err,result){
         if(err){
             console.log(err)
         }

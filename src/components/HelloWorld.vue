@@ -1,113 +1,106 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
-    <ul>
-      <li>
-        <a
-          href="https://vuejs.org"
-          target="_blank"
-        >
-          Core Docs
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://forum.vuejs.org"
-          target="_blank"
-        >
-          Forum
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://chat.vuejs.org"
-          target="_blank"
-        >
-          Community Chat
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://twitter.com/vuejs"
-          target="_blank"
-        >
-          Twitter
-        </a>
-      </li>
-      <br>
-      <li>
-        <a
-          href="http://vuejs-templates.github.io/webpack/"
-          target="_blank"
-        >
-          Docs for This Template
-        </a>
-      </li>
-    </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li>
-        <a
-          href="http://router.vuejs.org/"
-          target="_blank"
-        >
-          vue-router
-        </a>
-      </li>
-      <li>
-        <a
-          href="http://vuex.vuejs.org/"
-          target="_blank"
-        >
-          vuex
-        </a>
-      </li>
-      <li>
-        <a
-          href="http://vue-loader.vuejs.org/"
-          target="_blank"
-        >
-          vue-loader
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/awesome-vue"
-          target="_blank"
-        >
-          awesome-vue
-        </a>
-      </li>
-    </ul>
+  <div>
+    用户：<input type="text" v-model="username">
+    密码：<input type="password" v-model="password">
+    <button @click="addReader">增加</button>
+    <button @click="searchReader">查询登陆</button>
+    <button @click="cancelReader">删除</button>
+    <button @click="updateReader">修改</button>
+
   </div>
 </template>
-
 <script>
 export default {
-  name: 'HelloWorld',
-  data () {
+  name:'test',
+  data(){
     return {
-      msg: 'Welcome to Your Vue.js App'
+      username:'',
+      password:''
     }
+  },
+methods:{
+  //这是做的插入操作
+   addReader:function(){
+      this.$http.post('/api/reader/addReader',{
+        name:this.username,
+        password:this.password
+      })
+      .then(res=>{
+     if(res.ok){
+       console.log('插入成功')
+        this.username = ''
+        this.password = ''
+     }else{
+       console.log('插入失败')
+       this.username = ''
+       this.password = ''
+     }
+    })
+    .catch(error=>{
+      console.log(error)
+    })
+   },
+  //这是做的查询操作(用户登陆验证)
+  searchReader:function(){
+    this.$http.post('/api/reader/searchReader',{
+      name:this.username,
+      password:this.password
+    })
+    .then(res=>{
+      // let name = res.data[0].name
+      // let password = res.data[0].password
+      if(this.username == ''||this.password == ''){
+        console.log('用户或者密码不能为空')
+      }
+      else if(!res.data.length){
+        console.log('密码或者用户名错误')
+      }else{
+        console.log('登陆成功')
+      }
+      
+    })
+  },
+  //这是做的删除操作
+  cancelReader:function(){
+     this.$http.post('/api/reader/cancelReader',{
+        name:this.username
+      })
+      .then(res=>{
+       if(res.ok){
+       console.log('删除成功')
+       this.username = ''
+       }else{
+       console.log('删除失败')
+     }
+    })
+    .catch(error=>{
+      console.log(error)
+    })  
+  },
+  //这是做的修改操作
+  updateReader:function(){
+     this.$http.post('/api/reader/updateReader',{
+        password:this.password,
+        name:this.username
+      })
+      .then(res=>{
+       if(res.ok){
+       console.log('修改成功')
+       this.password = ''
+       }else{
+       console.log('修改失败')
+     }
+    })
+    .catch(error=>{
+      console.log(error)
+    })  
   }
 }
+}
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
-  font-weight: normal;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
+
 </style>
+
+
+
